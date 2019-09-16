@@ -1,6 +1,6 @@
 # vue-coin-list
 
-[Watch here ](https://vue-coin-list.firebaseapp.com)
+Watch here [https://vue-coin-list.firebaseapp.com](https://vue-coin-list.firebaseapp.com)
 
 ## Project setup
 ```
