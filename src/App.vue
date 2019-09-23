@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <Table />
+    <CoinsList />
   </div>
 </template>
 
 <script>
-import Table from '@/components/Table';
+import CoinsList from '@/components/CoinsList';
 
 export default {
-  components: { Table }
+  components: { CoinsList }
 }
 </script>
 
@@ -20,14 +20,5 @@ export default {
     max-width: 800px;
     padding: 25px;
     box-sizing: border-box;
-  }
-
-  h1 {
-    font-size: 32px;
-    font-weight: 100;
-    padding: 10px;
-    margin-bottom: 50px;
-    text-transform: uppercase;
-    color: #42b983;
   }
 </style>

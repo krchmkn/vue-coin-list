@@ -1,24 +1,32 @@
 <template>
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
-        <section>
-            <table>
+        <section class="table-wrap">
+            <div v-if="loading" key="initial-loading">Loading...</div>
+            <table v-else key="initial-loading" class="table">
                 <thead>
-                    <tr>
-                        <th></th>
-                        <th>Coin</th>
-                        <th>Price</th>
-                        <th>Mkt. Cap.</th>
+                    <tr class="table__row table__row--thead">
+                        <th class="table__col"></th>
+                        <th class="table__col">Coin</th>
+                        <th class="table__col">Price</th>
+                        <th class="table__col">Mkt. Cap.</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, i) in list" :key="item.CoinInfo.id">
-                        <td nowrap>{{ ++i }}</td>
-                        <td nowrap>
-                            <img :src="origin + item.CoinInfo.ImageUrl" width="28" height="28" />
+                    <tr class="table__row table__row--tbody" 
+                        v-for="(item, i) in list" 
+                        :key="item.CoinInfo.id"
+                    >
+                        <td class="table__col" nowrap>{{ i + 1 }}</td>
+                        <td class="table__col" nowrap>
+                            <img class="table__image" 
+                                :src="origin + item.CoinInfo.ImageUrl" 
+                                width="28" 
+                                height="28" 
+                            />
                             <span>{{ item.CoinInfo.FullName }} ({{ item.CoinInfo.Name }})</span>
                         </td>
-                        <td nowrap>{{ item.DISPLAY.USD.PRICE }}</td>
-                        <td nowrap>{{ item.DISPLAY.USD.MKTCAP }}</td>
+                        <td class="table__col" nowrap>{{ item.DISPLAY.USD.PRICE }}</td>
+                        <td class="table__col" nowrap>{{ item.DISPLAY.USD.MKTCAP }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -30,6 +38,7 @@
 export default {
     data() {
         return {
+            loading: true,
             timer: null,
             origin: 'https://www.cryptocompare.com',
             list: [],
@@ -37,7 +46,10 @@ export default {
         }
     },
     created() {
-        this.loadList().then((list) => this.list = this.sortListByPrice(list));
+        this.loadList().then((list) => {
+            this.list = this.sortListByPrice(list);
+            this.loading = false;
+        });
         this.startAutoUpdate();
     },
     destroyed() {
@@ -46,8 +58,8 @@ export default {
     methods: {
         sortListByPrice(list) {
             return list.sort((a, b) => {
-                let aPrice = parseFloat(a.DISPLAY.USD.PRICE.substr(1));
-                let bPrice = parseFloat(b.DISPLAY.USD.PRICE.substr(1));
+                let aPrice = parseFloat(a.DISPLAY.USD.PRICE.substr(1).replace(',', ''));
+                let bPrice = parseFloat(b.DISPLAY.USD.PRICE.substr(1).replace(',', ''));
                 return bPrice - aPrice;
             });
         },
@@ -93,42 +105,36 @@ export default {
 </script>
 
 <style scoped>
-    section {
+    .table-wrap {
         overflow-x: auto;
     }
 
-    table {
+    .table {
         width: 100%;
         text-align: left;
         font: normal 1.2em monospace;
         display: block;
     }
 
-    @media(max-width: 500px) {
-        .hint {
-            display: block;
-        }
-    }
-
-    tr {
+    .table__row {
         border-bottom: 1px solid #eee;
     }
 
-    thead tr {
+    .table__row--thead {
         border-color: rgba(66, 185, 131, 1);
         font-weight: bold;
     }
 
-    tbody tr:hover {
+    .table__row--tbody:hover {
         background: rgba(66, 185, 131, .1);
     }
 
-    th, td {
+    .table__col {
         padding: 5px;
         vertical-align: middle;
     }
 
-    img {
+    .table__image {
         display: inline-block;
         vertical-align: middle;
         margin-right: 20px;
